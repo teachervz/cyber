@@ -7,7 +7,7 @@
 <!-- خط عربي واضح (إذا لم يتوفر إنترنت سيُستخدم خط Tahoma تلقائيًا) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
 /* =========================================================
@@ -281,6 +281,16 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text}
 .rev-content{height:100%;padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center}
 .rev-ic{font-size:66px}.rev-t{font-size:32px;font-weight:900;line-height:1.35}.rev-content p{font-size:25px;color:var(--muted);font-weight:600;line-height:1.5}
 
+/* ---------- قيمة دينية ---------- */
+.verse{position:relative;background:linear-gradient(160deg,#FFFDF5,#FFF6DD);border:3px solid #F4D58A;border-radius:36px;padding:30px 60px 24px;
+  text-align:center;box-shadow:var(--shadow)}
+.verse::before,.verse::after{content:"۞";position:absolute;top:50%;transform:translateY(-50%);font-size:54px;color:#D9A93A}
+.verse::before{right:22px}.verse::after{left:22px}
+.verse-t{font-family:'Amiri','Traditional Arabic',serif;font-size:52px;font-weight:700;line-height:1.9;color:#3B2A06}
+.verse-t mark{background:linear-gradient(transparent 55%,#FDE68A 55%);color:#7C2D12;padding:0 6px;border-radius:6px}
+.verse-src{font-size:26px;font-weight:800;color:#B45309;margin-top:4px}
+.value-tip{font-size:30px;font-weight:800;color:var(--pd);text-align:center}
+
 /* ---------- سجل الخادم ---------- */
 .term-wrap{flex:1;display:grid;grid-template-columns:600px 1fr;gap:34px;min-height:0}
 .browser{background:#fff;border-radius:26px;overflow:hidden;border:3px solid var(--line);display:flex;flex-direction:column;box-shadow:var(--shadow)}
@@ -411,6 +421,23 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text}
   background:linear-gradient(145deg,var(--p2),var(--pd));color:#fff;padding:26px 34px;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:8px;box-shadow:0 0 0 16px var(--ps),var(--shadow)}
 .map-center .mc-ic{font-size:58px}.map-center .mc-t{font-size:36px;font-weight:900}.map-center .mc-d{font-size:26px;font-weight:600;line-height:1.55}
 .map-center.enter{animation:pop .4s}
+
+/* ---------- فيديو ---------- */
+.video-wrap{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
+.video-box{height:100%;max-height:690px;aspect-ratio:16/9;border-radius:32px;overflow:hidden;background:#000;
+  border:8px solid #fff;box-shadow:0 0 0 4px var(--line),var(--shadow)}
+.video-box video{width:100%;height:100%;display:block;background:#000;object-fit:cover}
+
+/* ---------- اقتباس ---------- */
+.quote-wrap{flex:1;display:grid;grid-template-columns:420px 1fr;gap:60px;align-items:center;min-height:0}
+.q-photo{width:420px;height:525px;border-radius:40px;overflow:hidden;border:8px solid #fff;box-shadow:0 0 0 4px #D9A93A,var(--shadow);background:#111}
+.q-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.q-box{position:relative;background:#fff;border-radius:36px;padding:44px 56px 34px;box-shadow:var(--shadow);border-right:12px solid #059669}
+.q-box::before{content:"❝";position:absolute;top:-46px;right:40px;font-size:120px;line-height:1;color:#059669}
+.q-text{font-size:33px;font-weight:700;line-height:1.85;color:var(--ink)}
+.q-text b{color:#047857}
+.q-by{margin-top:22px;padding-top:18px;border-top:3px dashed var(--line);font-size:24px;font-weight:800;color:var(--muted);line-height:1.6}
+.q-by strong{display:block;font-size:30px;color:var(--pdd)}
 
 /* ---------- الختام ---------- */
 .closing{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;text-align:center}
@@ -564,13 +591,16 @@ body.idle #hint{opacity:0}
        review, leaderboard, closing
    • نظام التنافس: بعد كل إجابة صحيحة تظهر نافذة «أي مجموعة أجابت؟»
      لتضغطي على لون المجموعة فتُضاف لها النقاط. ويمكن تعديل النقاط يدويًا من زر 🏆
+   • pointEach:true داخل شريحة الترتيب أو التصنيف = نقطة للمجموعة بعد كل إجابة صحيحة (وليس في النهاية فقط).
+   • noPoints:true داخل شريحة سؤال = بدون احتساب نقاط (مثل أسئلة مراجعة الدرس السابق).
+   • video: src = اسم ملف الفيديو (في نفس المجلد)، autoplay:true = يبدأ تلقائيًا عند الوصول للشريحة.
    • في الأسئلة: answer = رقم الإجابة الصحيحة بدءًا من 0 (الخيار الأول = 0).
    • يمكنك استخدام <b>نص</b> لجعل الكلمة عريضة.
    ========================================================================== */
 
 const LESSON = {
   title:    'الأمن السيبراني',
-  lessonNo: 'الدرس الثالث',
+  lessonNo: 'الدرس الثالث – الجزء الأول',
   subject:  'التقنية الرقمية',
   teacher:  '',
   school:   '',
@@ -602,7 +632,51 @@ const SLIDES = [
   { type:'title', anim:'zoom',
     subtitle:'مهمتكِ اليوم: أن تفكّري كـ <b>محللة أمن سيبراني</b> 🕵️‍♀️ تحمي البيانات وتكشف التهديدات' },
 
-  /* 2) تمهيد بموقف واقعي — ماذا تتوقعين؟ */
+  /* 2) مراجعة الدرس السابق (1) */
+  { type:'mcq', tag:'🔁 مراجعة الدرس السابق', title:'ما المصطلح المناسب؟ (1 من 4)', anim:'fade', noPoints:true,
+    question:'وصف تفصيلي لجميع عمليات ومراحل تصميم النظام بشكل مكتوب وموثّق',
+    options:[
+      { icon:'📊', t:'التقييم' },
+      { icon:'📑', t:'التوثيق' },
+      { icon:'📝', t:'التحليل' }
+    ],
+    answer:1 },
+
+  /* 3) مراجعة الدرس السابق (2) */
+  { type:'mcq', tag:'🔁 مراجعة الدرس السابق', title:'ما المصطلح المناسب؟ (2 من 4)', anim:'fade', noPoints:true,
+    question:'تحديد المشكلة التي تحتاج إلى حل',
+    options:[
+      { icon:'🎨', t:'التصميم' },
+      { icon:'🧪', t:'التطوير والاختبار' },
+      { icon:'📝', t:'التحليل' }
+    ],
+    answer:2 },
+
+  /* 4) مراجعة الدرس السابق (3) */
+  { type:'mcq', tag:'🔁 مراجعة الدرس السابق', title:'ما المصطلح المناسب؟ (3 من 4)', anim:'fade', noPoints:true,
+    question:'معالجة المشكلة أولًا بأول لضمان كفاءة النظام',
+    options:[
+      { icon:'🎨', t:'التصميم' },
+      { icon:'📊', t:'التقييم' },
+      { icon:'📝', t:'التحليل' }
+    ],
+    answer:1 },
+
+  /* 5) مراجعة الدرس السابق (4) */
+  { type:'mcq', tag:'🔁 مراجعة الدرس السابق', title:'ما المصطلح المناسب؟ (4 من 4)', anim:'fade', noPoints:true,
+    question:'تحسين ورفع جودة وظائف النظام بناءً على التغذية الراجعة من المستخدمين',
+    options:[
+      { icon:'🎨', t:'التصميم' },
+      { icon:'🔧', t:'الصيانة' },
+      { icon:'🚀', t:'التنفيذ' }
+    ],
+    answer:1 },
+
+  /* 6) فيديو تمهيدي */
+  { type:'video', tag:'🎬 شاهدي وتأمّلي', title:'فيديو تمهيدي', anim:'fade',
+    src:'intro.mp4', autoplay:true },
+
+  /* 7) تمهيد بموقف واقعي — ماذا تتوقعين؟ */
   { type:'mcq', tag:'🔮 تمهيد: ماذا ستفعلين؟', title:'موقف حقيقي… يحدث كل يوم',
     scene:`<div class="phone"><div class="sms-head">📩 رسالة جديدة • رقم غير معروف</div>
             <div class="sms">🎉 مبروك! تم اختيار رقمك للفوز بجائزة <b>5000 ريال</b> 🎁<br>لاستلامها أدخلي بيانات بطاقتك البنكية خلال <b>10 دقائق</b> فقط ⏳
@@ -617,31 +691,29 @@ const SLIDES = [
     answer:2,
     explain:'هذا <b>احتيال إلكتروني</b> 🎣 يعتمد على الاستعجال والإغراء. درس اليوم سيعلّمكِ كيف تحمين نفسكِ وأنظمتكِ.' },
 
-  /* 3) أهداف الدرس */
+  /* 8) أهداف الدرس */
   { type:'objectives', tag:'🎯 أهداف الدرس', title:'بنهاية هذه المهمة ستكونين قادرة على:',
     goals:[
       { icon:'🔄', t:'توضيح كيفية دمج الأمن السيبراني في مراحل دورة حياة النظام' },
       { icon:'👣', t:'تصنيف البصمة الرقمية إلى نشطة وغير نشطة' },
-      { icon:'🧱', t:'التمييز بين وظيفة جدار الحماية ووظيفة مكافحة الفيروسات' },
-      { icon:'👤', t:'المقارنة بين أنواع حسابات المستخدم في ويندوز' },
-      { icon:'📁', t:'تطبيق أذونات الملفات والمجلدات لحماية البيانات' }
+      { icon:'🧱', t:'التمييز بين وظيفة جدار الحماية ووظيفة مكافحة الفيروسات' }
     ],
     hint:'اضغطي على الهدف عند تحقّقه في نهاية الدرس ✓' },
 
-  /* 4) العصف الذهني */
+  /* 9) العصف الذهني */
   { type:'brainstorm', tag:'🧠 العصف الذهني', title:'ماذا تعرفين مسبقًا؟',
     prompt:'ما الكلمات التي تخطر ببالكِ عند سماع «الأمن السيبراني»؟ 💭',
     center:'الأمن<br>السيبراني',
     seconds:120,
     suggestions:['حماية البيانات','كلمات المرور','الاختراق','الفيروسات','الخصوصية','جدار الحماية','الاحتيال','التشفير','التحديثات','الهاكرز'] },
 
-  /* 5) أكملي الفراغ — تعريف الهيئة */
+  /* 10) أكملي الفراغ — تعريف الهيئة */
   { type:'blanks', tag:'🧩 خمّني الكلمة المفقودة', title:'ما هو الأمن السيبراني؟',
     source:'تعريف الهيئة الوطنية للأمن السيبراني (NCA):',
     text:'هو حماية [الشبكات] وأنظمة تقنية المعلومات والأنظمة التشغيلية ومكوناتها من [أجهزة] و[برمجيات]، وما تقدمه من خدمات وما تحتويه من [بيانات]، من أي [اختراق] أو تعطيل أو تعديل أو دخول أو استخدام أو استغلال غير مشروع.',
     note:'<span class="ni">🏛️</span><div><b>الهيئة الوطنية للأمن السيبراني</b> تأسست بأمر ملكي، وهي الجهة المختصة والمرجع الوطني في شؤون الأمن السيبراني بالمملكة.</div>' },
 
-  /* 6) ماذا تتوقعين؟ */
+  /* 11) ماذا تتوقعين؟ */
   { type:'mcq', tag:'🔮 ماذا تتوقعين؟', title:'المملكة على خريطة الأمن السيبراني العالمية', anim:'fade',
     scene:`<div class="scene-card"><div class="sc-big">🏆</div><div class="sc-t">المؤشر العالمي<br>للأمن السيبراني</div><div class="sc-s">Global Cybersecurity Index – GCI</div></div>`,
     question:'برأيكِ… ما ترتيب المملكة العربية السعودية في هذا المؤشر (الكتاب السنوي للتنافسية العالمية 2026)؟',
@@ -654,9 +726,8 @@ const SLIDES = [
     answer:2,
     explain:'حافظت المملكة على <b>المركز الأول عالميًا</b> 🥇، وصُنّفت ضمن الفئة الأولى <b>«النموذج المحتذى به»</b> في مؤشر الاتحاد الدولي للاتصالات (ITU).' },
 
-  /* 7) بطاقات: مبادرات المملكة */
+  /* 12) بطاقات: مبادرات المملكة */
   { type:'cards', tag:'🃏 بطاقات الاكتشاف', title:'كيف وصلت المملكة للصدارة؟',
-    subtitle:'كل مجموعة تختار بطاقة، تقرؤها، ثم تشرحها للفصل بجملة واحدة 🎤',
     cards:[
       { icon:'🎓', title:'التعليم والتدريب', color:'#7C3AED',
         text:'برامج الأكاديمية الوطنية، معسكرات الاتحاد السعودي للأمن السيبراني والبرمجة والدرونز (SAFCSP)، وإطار «سايبر-التعليم».' },
@@ -668,8 +739,8 @@ const SLIDES = [
         text:'البرنامج الوطني «سايبرك» (CyberIC)، و«التمارين الوطنية السيبرانية»، ومبادرات لفئات المجتمع.' }
     ] },
 
-  /* 8) لعبة الترتيب: دورة حياة النظام */
-  { type:'order', tag:'🧗 تحدي الترتيب', title:'دمج الأمن في دورة حياة النظام',
+  /* 13) لعبة الترتيب: دورة حياة النظام */
+  { type:'order', tag:'🧗 تحدي الترتيب', title:'دمج الأمن في دورة حياة النظام', pointEach:true,
     prompt:'رتّبي مراحل دورة حياة النظام بالضغط عليها بالترتيب الصحيح 👇',
     items:[
       { icon:'📝', t:'التحليل',     en:'Analysis',       info:'<b>التحليل:</b> تحديد متطلبات الأمن السيبراني وتوثيقها منذ البداية.' },
@@ -680,7 +751,7 @@ const SLIDES = [
       { icon:'🔧', t:'الصيانة',     en:'Maintenance',    info:'<b>الصيانة:</b> تقييمات أمنية منتظمة وتحديث ضوابط الأمان حسب الحاجة.' }
     ] },
 
-  /* 9) سؤال اختيار من متعدد */
+  /* 14) سؤال اختيار من متعدد */
   { type:'mcq', tag:'❓ استراتيجية الأسئلة', title:'سؤال سريع', anim:'fade',
     question:'في أي مرحلة يُجرى «اختبار الاختراق» ومسح الثغرات الأمنية؟',
     options:[
@@ -692,7 +763,7 @@ const SLIDES = [
     answer:2,
     explain:'في مرحلة <b>الاختبارات</b> نحاول «مهاجمة» النظام بطريقة مشروعة لنكتشف الثغرات قبل المخترقين.' },
 
-  /* 10) لاحظي واكتشفي: البصمة الرقمية */
+  /* 15) لاحظي واكتشفي: البصمة الرقمية */
   { type:'footprints', tag:'🔍 لاحظي واكتشفي', title:'ماذا تتركين خلفكِ على الإنترنت؟',
     prompt:'اختاري ما فعلتِه خلال الأسبوع الماضي، وراقبي ماذا يحدث 👀',
     actions:[
@@ -707,8 +778,8 @@ const SLIDES = [
     ],
     reveal:'هذه هي <b>البصمة الرقمية (Digital Footprint)</b>: أثر تتركينه عند كل عمل أو تصفح عبر الإنترنت، وقد يتمكن الآخرون من رؤيته وتحليله.' },
 
-  /* 11) تصنيف: نشطة أم غير نشطة */
-  { type:'sort', tag:'🗂️ صنّفي', title:'البصمة الرقمية: نشطة أم غير نشطة؟',
+  /* 16) تصنيف: نشطة أم غير نشطة */
+  { type:'sort', tag:'🗂️ صنّفي', title:'البصمة الرقمية: نشطة أم غير نشطة؟', pointEach:true,
     prompt:'هل تُركت هذه البصمة <b>بإرادتكِ</b> أم <b>دون قصد</b>؟ اضغطي على العمود المناسب',
     buckets:[
       { key:'a', label:'بصمة نشطة',     icon:'🙋‍♀️', color:'#7C3AED' },
@@ -725,7 +796,7 @@ const SLIDES = [
       { icon:'🔎', t:'موقع يسجّل عمليات بحثك', b:'p' }
     ] },
 
-  /* 12) بطاقات: تأثير البصمة على دورة حياة النظام */
+  /* 17) بطاقات: تأثير البصمة على دورة حياة النظام */
   { type:'cards', tag:'🃏 بطاقات الاكتشاف', title:'كيف تؤثر البصمة الرقمية على الأنظمة والمؤسسات؟',
     subtitle:'قبل قلب البطاقة: توقّعي ماذا تعني كل كلمة 🤔',
     cards:[
@@ -739,7 +810,7 @@ const SLIDES = [
         text:'مراقبة البصمة الرقمية بانتظام عبر وسائل التواصل والمنصات لاكتشاف الأخطار مبكرًا.' }
     ] },
 
-  /* 13) كشف تدريجي: آثار التعقب الرقمية */
+  /* 18) كشف تدريجي: آثار التعقب الرقمية */
   { type:'reveal', tag:'👀 اكشفي', title:'آثار التعقب الرقمية (Digital Traces)', h:330,
     qIcon:'🧐', question:'كل نشاط لكِ يترك «آثارًا» تكوّن بصمتك… تنقسم إلى نوعين، ما هما؟',
     items:[
@@ -747,7 +818,18 @@ const SLIDES = [
       { icon:'🕶️', t:'آثار غير مقصودة وغير مرئية', d:'سجلات زيارات المواقع، عمليات البحث، سجلات تحركاتك على الإنترنت وتواصلك مع الآخرين.' }
     ] },
 
-  /* 14) محاكاة سجل الخادم */
+  /* 19) قيمة دينية: ونكتب ما قدّموا وآثارهم */
+  { type:'value', tag:'🌿 قيمة دينية', title:'آثارنا… مكتوبة', anim:'fade', h:250,
+    verse:'إِنَّا نَحْنُ نُحْيِي الْمَوْتَىٰ <mark>وَنَكْتُبُ مَا قَدَّمُوا وَآثَارَهُمْ</mark> ۚ وَكُلَّ شَيْءٍ أَحْصَيْنَاهُ فِي إِمَامٍ مُّبِينٍ',
+    source:'سورة يس – الآية 12',
+    items:[
+      { icon:'✍️', cover:'ما معنى «ما قدّموا»؟', t:'ما قدّموا', d:'الأعمال التي عملها الإنسان في حياته من خير أو شر، فكلها محفوظة ومكتوبة.' },
+      { icon:'👣', cover:'ما معنى «آثارهم»؟', t:'وآثارهم', d:'ما يتركه الإنسان بعده من أثر يستمر: علم نافع، أو عمل خير يُقتدى به، أو عكس ذلك.' },
+      { icon:'💡', cover:'ما علاقتها ببصمتي الرقمية؟', t:'بصمتي الرقمية أثر', d:'كما تُسجَّل آثارنا على الإنترنت، فأعمالنا مكتوبة عند الله… فلنجعل بصمتنا الرقمية أثرًا طيبًا.' }
+    ],
+    tip:'🤍 قبل أن تنشري أو تعلّقي… اسألي نفسك: هل أرضى أن يُكتب هذا في صحيفتي؟' },
+
+  /* 20) محاكاة سجل الخادم */
   { type:'terminal', tag:'🔍 لاحظي واكتشفي', title:'ماذا يسجّل الخادم عنكِ في ثانية واحدة؟',
     url:'https://www.cyber-school.sa/lesson',
     pageText:'اضغطي لزيارة الموقع وراقبي الشاشة السوداء 👉',
@@ -764,7 +846,7 @@ const SLIDES = [
     question:'ماذا نسمي هذا الملف؟ ومن يستطيع رؤيته؟',
     answer:'هذه <b>سجلات الخادم (Server Logs)</b>: تُضاف إليها بيانات في كل زيارة، ولا يراها إلا <b>مالك الموقع</b>… وقد تُتتبَّع زياراتك بصمت دون علمك 🤫' },
 
-  /* 15) فكّري – زاوجي – شاركي */
+  /* 21) فكّري – زاوجي – شاركي */
   { type:'tps', tag:'👭 فكّري – زاوجي – شاركي', title:'قضية للنقاش',
     question:'📸 نشرت إحدى الطالبات صورة من نافذة غرفتها، والتطبيق يضيف موقعها تلقائيًا. ما المعلومات التي قد يعرفها الغرباء؟ ومن أين تجمع الشركات معلوماتنا؟',
     phases:[
@@ -774,7 +856,7 @@ const SLIDES = [
     ],
     answers:['📍 الموقع الجغرافي (GPS)','🏠 الحي وشكل المنزل','⏰ أوقات التواجد','✍️ ما ندخله بأنفسنا: الاسم والبريد والجوال','📶 نقاط الواي فاي المحيطة','📰 مصادر عامة وشركاء التسويق'] },
 
-  /* 16) كشف: مخاطر تداول البيانات */
+  /* 22) كشف: مخاطر تداول البيانات */
   { type:'reveal', tag:'⚠️ ماذا يحدث لبياناتي؟', title:'مخاطر تداول البيانات الشخصية', h:300,
     qIcon:'💭', question:'بياناتك تنتقل وتُخزَّن في أماكن كثيرة… ما الذي قد يترتب على ذلك؟',
     items:[
@@ -784,7 +866,7 @@ const SLIDES = [
       { icon:'🏢', t:'إتاحتها لجهات متعددة', d:'باحثون، سلطات، محاكم، وشركات تسويق.' }
     ] },
 
-  /* 17) مقارنة: جدار الحماية ومكافحة الفيروسات */
+  /* 23) مقارنة: جدار الحماية ومكافحة الفيروسات */
   { type:'compare', tag:'⚖️ قارني', title:'جدار الحماية 🆚 مكافحة الفيروسات',
     cols:[
       { icon:'🧱', name:'جدار الحماية', color:'#7C3AED', analogy:'مثل حارس بوابة المدرسة 💂‍♀️' },
@@ -798,8 +880,8 @@ const SLIDES = [
       { k:'التوافق',       a:'قد يتعارض مع برامج أمان أخرى',            b:'متوافق مع معظم برامج الأمان' }
     ] },
 
-  /* 18) تصنيف: من المسؤول؟ */
-  { type:'sort', tag:'🕵️‍♀️ من المسؤول؟', title:'مَن يتصدّى لهذا التهديد؟',
+  /* 24) تصنيف: من المسؤول؟ */
+  { type:'sort', tag:'🕵️‍♀️ من المسؤول؟', title:'مَن يتصدّى لهذا التهديد؟', pointEach:true,
     prompt:'اقرئي الموقف، ثم حدّدي أداة الحماية المسؤولة عنه',
     buckets:[
       { key:'f', label:'جدار الحماية',     icon:'🧱', color:'#7C3AED' },
@@ -814,7 +896,7 @@ const SLIDES = [
       { icon:'🔬', t:'فحص الملفات بحثًا عن سلوكيات البرامج الضارة', b:'v' }
     ] },
 
-  /* 19) سؤال تحدٍّ مع كشف */
+  /* 25) سؤال تحدٍّ مع كشف */
   { type:'reveal', tag:'🤔 سؤال تحدٍّ', title:'هل جدار الحماية يحميني من كل شيء؟', h:300,
     qIcon:'🧱', question:'جدار الحماية وحده لا يكفي! ما التهديدات التي لا يحمي منها؟',
     items:[
@@ -823,7 +905,14 @@ const SLIDES = [
       { icon:'📧', t:'البريد غير المرغوب فيه', d:'رسائل عشوائية مزعجة (Spam).' }
     ] },
 
-  /* 20) سؤال */
+  /* 26) كلمة ولي العهد */
+  { type:'quote', tag:'🇸🇦 كلمة ملهمة', title:'رؤية القيادة للأمن السيبراني', anim:'fade',
+    image:'MBS.jpg',
+    name:'صاحب السمو الملكي الأمير محمد بن سلمان بن عبد العزيز',
+    by:'ولي العهد نائب رئيس مجلس الوزراء وزير الدفاع<br>كلمته في قمة العشرين 2019 – اليابان',
+    text:'«نحن نعيش في زمن الابتكارات العلمية والتقنية غير المسبوقة، وآفاق النمو غير المحدودة، ويمكن لهذه التقنيات الجديدة مثل الذكاء الاصطناعي وإنترنت الأشياء، في حال تم استخدامها على النحو الأمثل، أن تجلب للعالم فوائد ضخمة، وفي الوقت ذاته فقد ينتج عن هذه الابتكارات تحديات جديدة مثل تغير أنماط العمل والمهارات اللازمة للتأقلم مع مستقبل العمل وكذلك <b>زيادة مخاطر الأمن السيبراني وتدفق المعلومات</b> مما يستوجب علينا معالجة هذه التحديات في أقرب وقت لتفادي تحولها إلى أزمات اقتصادية واجتماعية.»' },
+
+  /* 27) سؤال */
   { type:'mcq', tag:'❓ اختاري الإجابة الصحيحة', title:'موقف تقني', anim:'fade',
     question:'ثبّتِ برنامج مكافحة فيروسات يحتوي على جدار حماية، فطلب منكِ تعطيل جدار حماية ويندوز. لماذا؟',
     options:[
@@ -835,99 +924,33 @@ const SLIDES = [
     answer:1,
     explain:'قد يتعارض جدار الحماية مع برامج أمان أخرى. ويحتوي ويندوز على جدار <b>Windows Defender</b> وبرنامج مكافحة فيروسات مجاني هو <b>مايكروسوفت ديفندر</b>.' },
 
-  /* 21) بطاقات: أنواع الحسابات */
-  { type:'cards', tag:'🃏 بطاقات الاكتشاف', title:'أنواع حسابات المستخدم في ويندوز',
-    subtitle:'يتيح ويندوز أربعة أنواع من الحسابات… اقلبي البطاقة لتتعرفي على كل نوع',
-    cards:[
-      { icon:'👑', title:'حساب المسؤول المدمج', color:'#7C3AED',
-        text:'يُستخدم عند تصنيع الجهاز، ويملك جميع الامتيازات والتحكم الكامل في إعدادات الحاسب.' },
-      { icon:'🛠️', title:'مستخدم بامتيازات إدارية', color:'#EC4899',
-        text:'يثبّت البرامج وتعريفات الأجهزة، ويغيّر إعدادات النظام، ويُنشئ حسابات للمستخدمين.' },
-      { icon:'☁️', title:'حساب مايكروسوفت', color:'#0EA5E9',
-        text:'يُدار عبر الإنترنت، ويزامن إعداداتك وملفاتك بين الأجهزة، ويفتح لكِ OneDrive و Office 365.' },
-      { icon:'💻', title:'حساب محلي', color:'#F59E0B',
-        text:'على جهاز واحد دون اتصال بالإنترنت، يُخزَّن محليًا ولا تتم مزامنة ملفاته مع أي حاسب آخر.' }
-    ] },
-
-  /* 22) تصنيف: من أنا؟ */
-  { type:'sort', tag:'🎭 لغز: من أنا؟', title:'حساب مايكروسوفت أم حساب محلي؟',
-    prompt:'اقرئي الجملة وكأن الحساب يتحدث عن نفسه… من أنا؟',
-    buckets:[
-      { key:'m', label:'حساب مايكروسوفت', icon:'☁️', color:'#0EA5E9' },
-      { key:'l', label:'حساب محلي',       icon:'💻', color:'#F59E0B' }
-    ],
-    items:[
-      { icon:'🔄', t:'أزامن إعداداتك وملفاتك عبر أجهزة متعددة', b:'m' },
-      { icon:'🏠', t:'أعيش على القرص الصلب لجهاز واحد فقط', b:'l' },
-      { icon:'📂', t:'معي تفتحين OneDrive و Office 365', b:'m' },
-      { icon:'🧒', t:'أناسب طفلًا ليس لديه بريد إلكتروني', b:'l' },
-      { icon:'🌐', t:'أحتاج اتصالًا بالإنترنت لأعمل بكل مزاياي', b:'m' },
-      { icon:'🔒', t:'لا أزامن أي شيء مع حاسب آخر', b:'l' }
-    ] },
-
-  /* 23) موقف من الحياة */
-  { type:'mcq', tag:'💼 موقف من الحياة', title:'حلّي المشكلة', anim:'fade',
-    question:'لديكِ ملف Word على اللابتوب، وتريدين إكمال العمل عليه من جهاز المدرسة. أي حساب يساعدكِ؟',
-    options:[
-      { icon:'💻', t:'الحساب المحلي' },
-      { icon:'☁️', t:'حساب مايكروسوفت' },
-      { icon:'👑', t:'حساب المسؤول المدمج' },
-      { icon:'🚫', t:'لا يمكن ذلك أبدًا' }
-    ],
-    answer:1,
-    explain:'حساب مايكروسوفت يزامن ملفاتك عبر <b>OneDrive</b>، بينما الحساب المحلي يحفظها على جهاز واحد فقط.' },
-
-  /* 24) مطابقة: أذونات الملفات */
-  { type:'match', tag:'🔗 طابقي', title:'أذونات الملفات والمجلدات (NTFS)',
-    prompt:'اضغطي على الإذن، ثم على وصفه المناسب',
-    pairs:[
-      { a:'التحكم الكامل <small>Full Control</small>',        b:'كل شيء: قراءة، كتابة، تعديل، حذف، وتغيير الأذونات' },
-      { a:'التعديل <small>Modify</small>',                     b:'قراءة وكتابة وتعديل وحذف الملفات والمجلدات' },
-      { a:'القراءة والتنفيذ <small>Read & Execute</small>',   b:'عرض الملفات وتشغيل البرامج التنفيذية' },
-      { a:'عرض محتويات المجلد <small>List Folder</small>',    b:'عرض وتشغيل ما في المجلدات الفرعية فقط' },
-      { a:'القراءة <small>Read</small>',                       b:'عرض الملفات والوصول إلى محتوياتها فقط' },
-      { a:'الكتابة <small>Write</small>',                      b:'إضافة ملفات ومجلدات فرعية جديدة' }
-    ] },
-
-  /* 25) سؤال */
-  { type:'mcq', tag:'❓ استراتيجية الأسئلة', title:'طبّقي ما تعلمتِه', anim:'fade',
-    question:'تريد سارة منع أخيها من فتح مجلد «مذكراتي» على حاسب المنزل المشترك. ما الحل الأنسب؟',
-    options:[
-      { icon:'🗑️', t:'تحذف المجلد نهائيًا' },
-      { icon:'🔐', t:'تعدّل أذونات المجلد وتختار «الرفض» له' },
-      { icon:'🙈', t:'تغيّر اسم المجلد' },
-      { icon:'📤', t:'ترسل المجلد لنفسها بالبريد' }
-    ],
-    answer:1,
-    explain:'خصائص المجلد ← <b>الأمان</b> ← تحرير ← إضافة المستخدم ← <b>رفض (Deny)</b> بجانب التحكم الكامل ← موافق.' },
-
-  /* 26) صح أم خطأ */
+  /* 28) صح أم خطأ */
   { type:'tf', tag:'✔️✖️ التقييم الفوري: صح أم خطأ؟', title:'قرّري… وبرّري!',
     items:[
       { t:'جدار الحماية يحميني من رسائل البريد غير المرغوب فيها.', a:false, why:'خطأ: لا يحمي من البريد المزعج ولا الاحتيال ولا الإعلانات المنبثقة.' },
       { t:'البصمة الرقمية غير النشطة قد أتركها دون أن أعرف.', a:true, why:'صح: مثل تحديد الموقع وملفات تعريف الارتباط.' },
       { t:'يكفي دمج الأمن السيبراني في مرحلة التصميم فقط.', a:false, why:'خطأ: يُدمج في جميع مراحل دورة حياة النظام.' },
       { t:'سجلات الخادم يستطيع أي زائر للموقع رؤيتها.', a:false, why:'خطأ: لا يراها إلا مالك الموقع.' },
-      { t:'في ويندوز تُورَّث الأذونات من المجلد الأصل إلى ما بداخله.', a:true, why:'صح: ويستمر هذا التسلسل الهرمي حتى جذر القرص الصلب.' }
+      { t:'جدار الحماية قد يكون جهازًا أو برنامجًا.', a:true, why:'صح: بينما مكافحة الفيروسات برمجيات دائمًا.' }
     ] },
 
-  /* 27) التعلم التعاوني */
+  /* 29) التعلم التعاوني */
   // المهام بنفس ترتيب المجموعات في LESSON.teams (المهمة الأولى للمجموعة الأولى… وهكذا)
   { type:'groups', tag:'🤝 التعلم التعاوني', title:'غرفة العمليات السيبرانية', points:3,
     prompt:'لكل مجموعة مهمة… اكشفي مهمتكِ ونفّذيها قبل انتهاء الوقت ⏱️ (حتى 3 نقاط)',
     seconds:180,
     tasks:[
-      'مثّلن مشهدًا قصيرًا (30 ثانية) يوضح الفرق بين جدار الحماية ومكافحة الفيروسات.',
+      'قارنّ بين جدار الحماية ومكافحة الفيروسات.',
       'اكتبن 3 أمثلة لبصمة نشطة و3 لبصمة غير نشطة من يومكن.',
-      'صمّمن جدولًا يقارن بين حساب مايكروسوفت والحساب المحلي في 3 نقاط.',
-      'اقترحن أذونات مناسبة لمجلد «صور العائلة» على حاسب مشترك للأسرة.',
+      'وضّحن كيف تؤثر البصمة الرقمية على المؤسسات: الأخطار الأمنية، السمعة، التوافق، المراقبة (مثال لكل منها).',
+      'اذكرن 4 مخاطر لتداول البيانات الشخصية، واقترحن طريقة حماية لكل خطر.',
       'رتّبن مراحل دورة حياة النظام مع إجراء أمني واحد لكل مرحلة.',
       'اكتبن 4 معلومات يسجلها الخادم عنكِ عند زيارة موقع، ولماذا يهمكِ ذلك؟',
       'لخّصن مبادرات المملكة الأربع في الأمن السيبراني بخريطة ذهنية صغيرة.',
       'اذكرن 3 تهديدات لا يحمي منها جدار الحماية مع مثال واقعي لكل منها.'
     ] },
 
-  /* 28) تحدي الدقيقة */
+  /* 30) تحدي الدقيقة */
   { type:'challenge', tag:'⚡ تحدي الدقيقة', title:'كم سؤالًا تجيبين في 60 ثانية؟',
     seconds:60,
     questions:[
@@ -937,12 +960,12 @@ const SLIDES = [
       { q:'مثال على بصمة رقمية غير نشطة؟', a:'تحديد الموقع / ملفات تعريف الارتباط' },
       { q:'ما البرنامج المجاني لمكافحة الفيروسات في ويندوز؟', a:'مايكروسوفت ديفندر (Microsoft Defender)' },
       { q:'اذكري تهديدًا لا يحمي منه جدار الحماية', a:'الاحتيال / الإعلانات المنبثقة / البريد المزعج' },
-      { q:'أي حساب يزامن ملفاتك عبر OneDrive؟', a:'حساب مايكروسوفت' },
-      { q:'ما نظام الملفات الذي تُطبَّق عليه الأذونات؟', a:'NTFS – نظام ملفات التقنية الجديدة' },
-      { q:'أي إذن يسمح بتغيير الأذونات نفسها؟', a:'التحكم الكامل (Full Control)' }
+      { q:'من يستطيع رؤية سجلات الخادم؟', a:'مالك الموقع فقط' },
+      { q:'ما ترتيب المملكة في المؤشر العالمي للأمن السيبراني؟', a:'المركز الأول عالميًا 🥇' },
+      { q:'أيهما يفحص الملفات بحثًا عن البرامج الضارة: الجدار أم المكافحة؟', a:'مكافحة الفيروسات' }
     ] },
 
-  /* 29) مراجعة: خريطة الدرس */
+  /* 31) مراجعة: خريطة الدرس */
   { type:'review', tag:'🗺️ مراجعة', title:'خريطة الدرس',
     center:{ icon:'🧠', t:'خريطة الأمن السيبراني', d:'اضغطي على أي فكرة لمراجعتها، واطلبي من زميلتكِ شرحها قبل الضغط!' },
     nodes:[
@@ -950,19 +973,17 @@ const SLIDES = [
       { icon:'🏛️', t:'المملكة والأمن السيبراني', color:'#10B981', d:'الهيئة الوطنية NCA، المركز الأول عالميًا في GCI، ومبادرات مثل سايبرك والتمارين الوطنية.' },
       { icon:'👣', t:'البصمة الرقمية', color:'#EC4899', d:'نشطة: بإرادتك (منشورات، نماذج). غير نشطة: دون قصد (الموقع، الكوكيز).' },
       { icon:'🗂️', t:'سجلات الخادم', color:'#0EA5E9', d:'تسجّل IP ووقت الاتصال وطريقة الطلب والملف المطلوب… ولا يراها إلا مالك الموقع.' },
-      { icon:'🧱', t:'جدار الحماية والمكافحة', color:'#F59E0B', d:'الجدار يراقب الشبكة ويمنع المتسللين، والمكافحة تفحص الملفات وتزيل البرامج الضارة.' },
-      { icon:'👤', t:'حسابات المستخدم', color:'#8B5CF6', d:'المسؤول المدمج، مستخدم بامتيازات إدارية، حساب مايكروسوفت، حساب محلي.' },
-      { icon:'📁', t:'أذونات الملفات', color:'#F43F5E', d:'التحكم الكامل، التعديل، القراءة والتنفيذ، عرض محتويات المجلد، القراءة، الكتابة.' }
+      { icon:'🧱', t:'جدار الحماية والمكافحة', color:'#F59E0B', d:'الجدار يراقب الشبكة ويمنع المتسللين، والمكافحة تفحص الملفات وتزيل البرامج الضارة.' }
     ] },
 
-  /* 30) لوحة الصدارة وإعلان الفائز */
+  /* 32) لوحة الصدارة وإعلان الفائز */
   { type:'leaderboard', tag:'🏆 لحظة الحسم', title:'لوحة الصدارة', anim:'zoom' },
 
-  /* 31) الختام */
+  /* 33) الختام */
   { type:'closing', anim:'zoom',
     title:'أنتِ خط الدفاع الأول 🛡️',
     message:'الأمن السيبراني ليس مهمة المختصين فقط… بل عادة يومية لكل واحدة منا',
-    tips:['🔑 كلمة مرور قوية لكل حساب','🤔 فكّري قبل أن تنشري','🔄 حدّثي برامج الحماية','🚫 لا تضغطي روابط مجهولة','📁 احمي ملفاتك بالأذونات'],
+    tips:['🔑 كلمة مرور قوية لكل حساب','🤔 فكّري قبل أن تنشري','🔄 حدّثي برامج الحماية','🚫 لا تضغطي روابط مجهولة','👣 انتبهي لبصمتك الرقمية'],
     rating:[
       { e:'😎', m:'رائعة! أنتِ جاهزة لتكوني محللة أمن سيبراني 🛡️' },
       { e:'🙂', m:'جميل! راجعي خريطة الدرس لتثبيت المعلومات 💜' },
@@ -1154,7 +1175,7 @@ R.mcq = {
       if(done) return;
       if(+b.dataset.k===s.answer){
         done=true; b.classList.add('correct'); $$('.opt',sec).forEach(o=>o!==b&&o.classList.add('dim'));
-        setFb(fb,true); ex&&ex.classList.add('show'); celebrate(b);
+        setFb(fb,true); ex&&ex.classList.add('show'); celebrate(b, s.noPoints);
       } else { b.classList.remove('wrong'); void b.offsetWidth; b.classList.add('wrong'); setFb(fb,false); sound.wrong(); }
     });
   }
@@ -1237,7 +1258,8 @@ R.order = {
           const sl=slots[k]; sl.classList.add('filled'); sl.innerHTML=`<div class="placed"><span class="pi">${it.icon}</span><b>${it.t}</b><small>${it.en||''}</small></div>`;
           sl.onclick=()=>{ slots.forEach(x=>x.classList.remove('sel')); sl.classList.add('sel'); info.innerHTML=it.info; };
           b.classList.add('gone'); info.innerHTML=it.info; idx++;
-          if(idx===s.items.length){ info.innerHTML='🎉 <b>'+MSG.allDone+'</b> — اضغطي على أي مرحلة لمراجعة دور الأمن فيها.'; celebrate($('.slots',sec)); }
+          if(s.pointEach) showAward();
+          if(idx===s.items.length){ info.innerHTML='🎉 <b>'+MSG.allDone+'</b> — اضغطي على أي مرحلة لمراجعة دور الأمن فيها.'; celebrate($('.slots',sec), s.pointEach); }
           else sound.ding();
         } else { shake(b); sound.wrong(); info.innerHTML='🤔 ليست هذه المرحلة التالية… فكّري: ماذا نفعل قبل ذلك؟ '+MSG.wrong; }
       };
@@ -1289,7 +1311,8 @@ R.sort = {
         const chip=document.createElement('div'); chip.className='bk-chip'; chip.textContent=`${it.icon||''} ${it.t}`; list.appendChild(chip);
         const c=$('.bk-count',b); c.textContent=+c.textContent+1;
         i++; setFb(fb,true,MSG.short);
-        if(i===items.length){ card.innerHTML=`<div class="sc-ic">🎉</div><div>${MSG.allDone}</div>`; retrigger(card,'enter'); prog.textContent='✓'; $('.sort-hint',sec).style.visibility='hidden'; celebrate(card); }
+        if(s.pointEach) showAward();
+        if(i===items.length){ card.innerHTML=`<div class="sc-ic">🎉</div><div>${MSG.allDone}</div>`; retrigger(card,'enter'); prog.textContent='✓'; $('.sort-hint',sec).style.visibility='hidden'; celebrate(card, s.pointEach); }
         else { sound.ding(); show(); }
       } else { shake(card); sound.wrong(); setFb(fb,false); }
     });
@@ -1307,6 +1330,16 @@ R.reveal = {
     $$('.rev',sec).forEach(r=>r.onclick=()=>open(r));
     $('.rev-all',sec).onclick=()=>$$('.rev',sec).forEach((r,i)=>setTimeout(()=>open(r),i*250));
   }
+};
+
+/* قيمة دينية: آية + كشف المعاني */
+R.value = {
+  html:s=>`<div class="verse rv"><p class="verse-t">﴿ ${s.verse} ﴾</p><div class="verse-src">${s.source}</div></div>
+    <div class="reveal-grid rv" style="--n:${s.items.length};--h:${s.h||250}px">${s.items.map((it,k)=>`<button class="rev"><div class="rev-cover">${it.icon}<small>${it.cover||'اضغطي للكشف'}</small></div>
+      <div class="rev-content"><div class="rev-t">${it.t}</div><p>${it.d}</p></div></button>`).join('')}</div>
+    <div class="center-row rv"><button class="btn ghost rev-all">📖 إظهار المعاني</button></div>
+    ${s.tip?`<p class="value-tip rv">${s.tip}</p>`:''}`,
+  init:sec=>R.reveal.init(sec)
 };
 
 /* سجل الخادم */
@@ -1472,6 +1505,18 @@ R.review = {
   }
 };
 
+/* فيديو */
+R.video = {
+  html:s=>`<div class="video-wrap rv"><div class="video-box"><video src="${s.src}" controls preload="auto" playsinline></video></div></div>`,
+  enter:(sec,s)=>{ const v=$('video',sec); if(s.autoplay){ v.currentTime=0; v.play().catch(()=>{}); } }
+};
+
+/* اقتباس مع صورة */
+R.quote = {
+  html:s=>`<div class="quote-wrap"><div class="q-photo rv"><img src="${s.image}" alt="${s.name}"></div>
+    <div class="q-box rv"><p class="q-text">${s.text}</p><div class="q-by"><strong>${s.name}</strong>${s.by}</div></div></div>`
+};
+
 /* الختام */
 R.closing = {
   html:s=>`<div class="closing"><div class="cl-shield rv">🛡️</div><h1 class="cl-title rv">${s.title}</h1><p class="cl-msg rv">${s.message}</p>
@@ -1504,6 +1549,7 @@ $('#brand').textContent=`${LESSON.lessonNo}: ${LESSON.title}`;
 function go(n){
   if(n<0||n>=slides.length) return;
   const dir=n>=current?1:-1, old=slides[current].el, nw=slides[n].el;
+  $$('video',old).forEach(v=>v.pause());
   if(n!==current){ old.classList.remove('active'); retrigger(old,'leaving'); setTimeout(()=>old.classList.remove('leaving'),460); }
   const anim=slides[n].cfg.anim||ANIMS[n%ANIMS.length];
   nw.classList.remove('in-fade','in-zoom','in-slide-next','in-slide-prev','active'); void nw.offsetWidth;
